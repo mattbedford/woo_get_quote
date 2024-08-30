@@ -1,8 +1,8 @@
 <?php
 
-if( ! defined( 'ABSPATH' ) ) exit;
-$path = preg_replace('/wp-content.*$/','',__DIR__);
-include_once($path.'wp-load.php'); 
+if (! defined('ABSPATH')) exit;
+$path = preg_replace('/wp-content.*$/', '', __DIR__);
+include_once($path . 'wp-load.php');
 
 
 class Quote
@@ -15,21 +15,22 @@ class Quote
     public function __construct()
     {
         $this->user_id = get_current_user_id();
-        if(0 === $this->user_id) {
+        if (0 === $this->user_id) {
             $this->error = ["error", "Utente non autorizzato"];
             return;
         }
         $this->quote_contents = get_user_meta($this->user_id, 'quote_contents', true);
-        if(empty($this->quote_contents)) {
+        if (empty($this->quote_contents)) {
             $this->quote_contents = [];
         }
     }
 
 
-    private function Add($request) {
-		
-		$item = $this->SanitizeRequest($request);
-        if(!empty($this->error)) {
+    public function Add($request)
+    {
+
+        $item = $this->SanitizeRequest($request);
+        if (!empty($this->error)) {
             return $this->error;
         }
 
@@ -38,8 +39,8 @@ class Quote
         if (in_array($item['product_id'], array_column($this->quote_contents, 'product_id'))) {
             foreach ($this->quote_contents as &$cartItem) {
                 if ($cartItem['product_id'] == $item['product_id']) {
-					$cartItem['quantity'] += $item['quantity'];
-                } 
+                    $cartItem['quantity'] += $item['quantity'];
+                }
             }
         } else {
             $this->quote_contents[] = $item;
@@ -47,24 +48,24 @@ class Quote
 
         $this->save_quote_contents();
         return $this->quote_contents;
-		
     }
 
 
-    private function Remove($request) {
+    public function Remove($request)
+    {
 
         $item = $this->SanitizeRequest($request);
 
         if (in_array($item['product_id'], array_column($this->quote_contents, 'product_id'))) {
             foreach ($this->quote_contents as $index => &$cartItem) {
                 if ($cartItem['product_id'] == $item['product_id']) {
-					$cartItem['volume'] -= $item['volume'];
-					
+                    $cartItem['volume'] -= $item['volume'];
+
                     // If quantity is 0 or less, remove item from quote and reset array keys
-					if($cartItem['volume'] <= 0) {
-						unset($this->quote_contents[$index]);
-						$this->quote_contents = array_values($this->quote_contents);
-					}
+                    if ($cartItem['volume'] <= 0) {
+                        unset($this->quote_contents[$index]);
+                        $this->quote_contents = array_values($this->quote_contents);
+                    }
                 }
             }
         } else {
@@ -73,11 +74,11 @@ class Quote
 
         $this->save_quote_contents();
         return $this->quote_contents;
-
     }
 
 
-    private function ClearOne($request) {
+    public function ClearOne($request)
+    {
 
         $item = $this->SanitizeRequest($request);
 
@@ -98,10 +99,17 @@ class Quote
     }
 
 
-	private function ClearAll() {
-		$this->save_quote_contents();
+    public function ClearAll()
+    {
+        $this->save_quote_contents();
         return $this->quote_contents;
-	}
+    }
+
+
+    public function Retrieve($request)
+    {
+        return $this->quote_contents;
+    }
 
 
     private function save_quote_contents()
@@ -109,44 +117,36 @@ class Quote
         update_user_meta($this->user_id, 'quote_contents', $this->quote_contents);
     }
 
+    private function SanitizeRequest($request): array
+    {
 
-    private function Retrieve($request)
-    {
-        return $this->quote_contents;
-    }
-	
-	private function SanitizeRequest($request): array
-    {
-		
+        if (!isset($request['product_id'])) {
+            $this->error = ["error", "Nessun prodotto inviato al sistema. Prego riprovare."];
+            return;
+        }
+
         $post_vars = [];
+        $post_vars['product_id'] = htmlspecialchars($request['product_id']);
 
-		if(!isset($request['product_id'])) {
-			$this->error = ["error", "Nessun prodotto inviato al sistema. Prego riprovare."];
-			return;
-		}
-		
-		$post_vars['product_id'] = htmlspecialchars($request['product_id']);
-	
         return $post_vars;
-	}
-	
-	
-	// Statics
-	public static function Count($current_user_id) {
-		
-		if (0 !== $current_user_id) {
-			$quote_contents = get_user_meta($current_user_id, 'quote_contents', true);
-			if(is_array($quote_contents) && !empty($quote_contents)) {
-					$cart_count = count($quote_contents);
-			} else {
-					$cart_count = 0;
-			}
-					
-		}
-		
-		return array("user_id" => $current_user_id, "quote_items_count" => $cart_count);
-		
-	}
-	
+    }
 
+
+    // Statics
+    public static function Count($current_user_id)
+    {
+
+        if (0 === $current_user_id) {
+            return array("user_id" => 0, "quote_items_count" => 0);
+        }
+
+        $quote_contents = get_user_meta($current_user_id, 'quote_contents', true);
+        if (is_array($quote_contents) && !empty($quote_contents)) {
+            $cart_count = count($quote_contents);
+        } else {
+            $cart_count = 0;
+        }
+
+        return array("user_id" => $current_user_id, "quote_items_count" => $cart_count);
+    }
 }
