@@ -6,7 +6,7 @@ namespace WooGetQuote;
 class rest
 {
     
-    public function registerLoggedInRoutes()
+    public function Register()
     {
         register_rest_route('woo-get-quote/v1', '/add', [
             'methods' => 'POST',
@@ -49,36 +49,142 @@ class rest
             }
         ]);
 
+        register_rest_route('woo-get-quote/v1', '/count', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'Count'],
+            'permission_callback' => function() {
+                return is_user_logged_in();
+            }
+        ]);
+
     }
 
 
-    public function Add($request)
+    private function Add($request)
     {
+        
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
+
+        try {
+
+            $res = $quote->Add($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            Logger($e->getMessage());
+        
+        }
         
     }
 
 
-    public function Remove($request)
+    private function Remove($request)
     {
+        
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
+
+        try {
+
+            $res = $quote->Remove($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            Logger($e->getMessage());
+        
+        }
+    }
+
+
+    private function ClearOne($request)
+    {
+
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
+
+        try {
+
+            $res = $quote->ClearOne($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            Logger($e->getMessage());
+        
+        }
         
     }
 
 
-    public function ClearOne($request)
+    private function ClearAll($request)
     {
         
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
+
+        try {
+
+            $res = $quote->ClearAll($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            Logger($e->getMessage());
+        
+        }
     }
 
 
-    public function ClearAll($request)
+    private function Retrieve($request)
     {
         
-    }
-    
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
 
-    public function Retrieve($request)
+        try {
+
+            $res = $quote->Retrieve($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            Logger($e->getMessage());
+        
+        }
+    }
+
+
+    private function Count($request)
     {
         
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
+
+        try {
+
+            $res = $quote->Count($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            Logger($e->getMessage());
+        
+        }
     }
 
 }

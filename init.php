@@ -16,6 +16,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
 class InitWooGetQuote
 {
     public function init()
@@ -30,11 +31,11 @@ class InitWooGetQuote
 
         if (!is_user_logged_in()) {
         } else {
-            add_action('rest_api_init', [new rest(), 'registerLoggedInRoute']);
+            add_action('rest_api_init', [new rest(), 'Register']);
         }
 
-        add_action('wp_enqueue_scripts', [Includes::class, 'enqueueScripts']);
-        add_action('woocommerce_before_shop_loop_item', [Includes::class, 'heartHtml'], 80);
+        add_action('wp_enqueue_scripts', [Includes::class, 'Enqueue']);
+        //add_action('woocommerce_before_shop_loop_item', [Includes::class, 'heartHtml'], 80);
     }
 }
 add_action('init', [new InitWooGetQuote(), 'init']);
