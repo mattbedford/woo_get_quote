@@ -1,0 +1,15 @@
+.quote-badge {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:absolute;
+    background:var(--pure-black);
+    color:var(--pure-hite);
+    top:-15px;
+    right:5px;
+    width:25px;
+    height:25px;
+    font-size:14px;
+    border-radius:50px;
+	z-index:999999;
+}

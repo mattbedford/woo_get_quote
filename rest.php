@@ -5,53 +5,62 @@ namespace WooGetQuote;
 
 class rest
 {
+    //TO DO: Simplify this and polymorphize.
     
     public function Register()
     {
-        register_rest_route('woo-get-quote/v1', '/add', [
+        register_rest_route('wgq/v1', '/add', [
             'methods' => 'POST',
-            'callback' => [self::class, 'Add'],
+            'callback' => [self::class, 'add'],
             'permission_callback' => function() {
             	return is_user_logged_in();
         	}
         ]);
 
-        register_rest_route('woo-get-quote/v1', '/remove', [
+        register_rest_route('wgq/v1', '/remove', [
             'methods' => 'POST',
-            'callback' => [self::class, 'Remove'],
+            'callback' => [self::class, 'remove'],
             'permission_callback' => function() {
                 return is_user_logged_in();
             }
         ]);
 
-        register_rest_route('woo-get-quote/v1', '/clear-one', [
+        register_rest_route('wgq/v1', '/clearone', [
             'methods' => 'POST',
-            'callback' => [self::class, 'ClearOne'],
+            'callback' => [self::class, 'clearone'],
             'permission_callback' => function() {
                 return is_user_logged_in();
             }
         ]);
 
 
-        register_rest_route('woo-get-quote/v1', '/clear-all', [
+        register_rest_route('wgq/v1', '/clearall', [
             'methods' => 'POST',
-            'callback' => [self::class, 'ClearAll'],
+            'callback' => [self::class, 'clearall'],
             'permission_callback' => function() {
                 return is_user_logged_in();
             }
         ]);
 
-        register_rest_route('woo-get-quote/v1', '/retrieve', [
+        register_rest_route('wgq/v1', '/retrieve', [
             'methods' => 'POST',
-            'callback' => [self::class, 'Retrieve'],
+            'callback' => [self::class, 'retrieve'],
+            'permission_callback' => function() {
+                return is_user_logged_in();
+            }
+        ]);
+		
+		register_rest_route('wgq/v1', '/retrievefull', [
+            'methods' => 'POST',
+            'callback' => [self::class, 'retrievefull'],
             'permission_callback' => function() {
                 return is_user_logged_in();
             }
         ]);
 
-        register_rest_route('woo-get-quote/v1', '/count', [
+        register_rest_route('wgq/v1', '/count', [
             'methods' => 'POST',
-            'callback' => [self::class, 'Count'],
+            'callback' => [self::class, 'count'],
             'permission_callback' => function() {
                 return is_user_logged_in();
             }
@@ -60,7 +69,7 @@ class rest
     }
 
 
-    private function Add($request)
+    public static function add($request)
     {
         
         include_once plugin_dir_path(__FILE__) . 'quote.php';
@@ -82,7 +91,7 @@ class rest
     }
 
 
-    private function Remove($request)
+    public static function remove($request)
     {
         
         include_once plugin_dir_path(__FILE__) . 'quote.php';
@@ -97,13 +106,13 @@ class rest
             return $res;
         
         } catch (\Exception $e) {
-            Logger($e->getMessage());
+            logger($e->getMessage());
         
         }
     }
 
 
-    private function ClearOne($request)
+    public static function clearone($request)
     {
 
         include_once plugin_dir_path(__FILE__) . 'quote.php';
@@ -118,14 +127,14 @@ class rest
             return $res;
         
         } catch (\Exception $e) {
-            Logger($e->getMessage());
+            logger($e->getMessage());
         
         }
         
     }
 
 
-    private function ClearAll($request)
+    public static function clearall($request)
     {
         
         include_once plugin_dir_path(__FILE__) . 'quote.php';
@@ -140,13 +149,13 @@ class rest
             return $res;
         
         } catch (\Exception $e) {
-            Logger($e->getMessage());
+            logger($e->getMessage());
         
         }
     }
 
 
-    private function Retrieve($request)
+    public static function retrieve($request)
     {
         
         include_once plugin_dir_path(__FILE__) . 'quote.php';
@@ -161,13 +170,34 @@ class rest
             return $res;
         
         } catch (\Exception $e) {
-            Logger($e->getMessage());
+            logger($e->getMessage());
+        
+        }
+    }
+	
+	
+	public static function retrievefull($request)
+    {
+        
+        include_once plugin_dir_path(__FILE__) . 'quote.php';
+        $args = $request->get_json_params();
+        $quote = new \Quote();
+        
+        $res = null;
+
+        try {
+
+            $res = $quote->RetrieveFull($args);
+            return $res;
+        
+        } catch (\Exception $e) {
+            logger($e->getMessage());
         
         }
     }
 
 
-    private function Count($request)
+    public static function count($request)
     {
         
         include_once plugin_dir_path(__FILE__) . 'quote.php';
@@ -182,7 +212,7 @@ class rest
             return $res;
         
         } catch (\Exception $e) {
-            Logger($e->getMessage());
+            logger($e->getMessage());
         
         }
     }

@@ -1,0 +1,105 @@
+.quote-wrapper-inner {
+    display:flex;
+    flex-direction:column-reverse;
+}
+.single-quote-product {
+    display:flex;
+    flex-direction:row;
+    background:var(--pure-white);
+    margin-bottom:20px;
+    align-items:center;
+}
+
+.loader {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      position: relative;
+      animation: rotate 1s linear infinite
+    }
+    .loader::before {
+      content: "";
+      box-sizing: border-box;
+      position: absolute;
+      inset: 0px;
+      border-radius: 50%;
+      border: 5px solid #FFF;
+      animation: prixClipFix 2s linear infinite ;
+    }
+
+    @keyframes rotate {
+      100%   {transform: rotate(360deg)}
+    }
+
+    @keyframes prixClipFix {
+        0%   {clip-path:polygon(50% 50%,0 0,0 0,0 0,0 0,0 0)}
+        25%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 0,100% 0,100% 0)}
+        50%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,100% 100%,100% 100%)}
+        75%  {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 100%)}
+        100% {clip-path:polygon(50% 50%,0 0,100% 0,100% 100%,0 100%,0 0)}
+    }
+
+
+.single-quote-product > div {
+    padding:20px;
+}
+.quote-item-image,
+.quote-table > div:nth-of-type(1) {
+    flex:0 1 25%;
+}
+.quote-item-image img {
+    object-fit:contain;
+    width:100%;
+    padding:20px;
+}
+.quote-item-texts,
+.quote-table > div:nth-of-type(2) {
+    flex:0 1 40%;
+}
+.quote-item-quantity,
+.quote-table > div:nth-of-type(3) {
+    flex:0 1 35%;
+}
+.quote-table {
+    display:flex;
+    flex-direction:row;
+    justify-content: flex-start;
+    background:var(--pure-white);
+    border-bottom:1px solid var(--grey-blue);
+}
+.quote-table h4 {
+    padding:10px 20px;
+    margin:0;
+}
+.quote-item-quantity > button {
+    background:var(--mid-blue);
+    color:var(--pure-white);
+    font-size:25px;
+}
+.quote-item-quantity .add {
+    border-radius: 10px 10px 10px 0;
+}
+.quote-item-quantity .remove {
+    border-radius: 0px 10px 10px 10px;
+}
+.quote-item-quantity span.quantity {
+    display:inline-block;
+    width:25px;
+    font-size:25px;
+    text-align:center;
+}
+button.wgq-command.clearAll {
+    display:inline-block;
+    background:none;
+    padding:0;
+    text-align:left;
+    text-decoration:underline;
+    margin:20px 0;
+    color:var(--dark-blue);
+    font-size:15px;
+    max-width:300px;
+}
+.wgq-command.clearOne {
+    display:inline-block;
+    margin-left:20px;
+}

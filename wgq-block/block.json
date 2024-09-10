@@ -1,0 +1,24 @@
+{
+    "name": "acf/wgq-block",
+    "title": "Quote list",
+    "description": "Show the list of all products the customer has added to their current quote request.",
+  	"script": "quote-items-retrieve-list",
+  	"style": "quote-items-custom-styles",
+    "category": "common",
+	"icon": "image-filter",
+    "keywords": ["preventivo", "quote", "wgc"],
+    "acf": {
+        "mode": "preview",
+        "renderCallback": "WooGetQuote\\WGQBlock::BuildQuoteBlock"
+    },
+    "supports": {
+        "anchor": true
+    }
+}
+
+
+
+
+
+
+
